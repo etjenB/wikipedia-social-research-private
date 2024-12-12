@@ -55,10 +55,10 @@ def fetch_representatives_data(url):
                 district = district_link.get_text(strip=True) if district_link else district_cell.get_text(strip=True)
 
                 data.append({
-                    "Name": rep_name,
-                    "Wiki Tag": wiki_tag,
-                    "Party": party,
-                    "District": district
+                    "name": rep_name,
+                    "wiki_tag": wiki_tag,
+                    "party": party,
+                    "district": district
                 })
 
     return data

@@ -17,7 +17,7 @@ def fetch_representatives_data(url):
     soup = BeautifulSoup(response.content.decode('utf-8', 'ignore'), "html.parser")
 
     # Locate the heading with id="Complete_seniority_list" or alternative IDs
-    heading = soup.find(id="Complete_seniority_list") or soup.find(id="Seniority_list")
+    heading = soup.find(id="Complete_seniority_list") or soup.find(id="Seniority_list") or soup.find(id="House_seniority_list")
     if not heading:
         print("No valid heading found with the expected IDs.")
         return None
@@ -52,10 +52,10 @@ def fetch_representatives_data(url):
                 district = district_link.get_text(strip=True) if district_link else district_cell.get_text(strip=True)
 
                 data.append({
-                    "Name": rep_name,
-                    "Wiki Tag": wiki_tag,
-                    "Party": party,
-                    "District": district
+                    "name": rep_name,
+                    "wiki_tag": wiki_tag,
+                    "party": party,
+                    "district": district
                 })
 
     return data

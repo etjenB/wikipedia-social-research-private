@@ -43,7 +43,7 @@ def fetch_mps_data(url):
                 data.append({
                     "constituency": constituency,
                     "party": party,
-                    "mp_name": mp_name,
+                    "name": mp_name,
                     "wiki_tag": wiki_tag,
                 })
 

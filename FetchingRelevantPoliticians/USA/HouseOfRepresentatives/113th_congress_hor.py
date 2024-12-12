@@ -55,15 +55,11 @@ def fetch_representatives_data(url):
                 district_link = district_cell.find("a", href=True, title=True)
                 district = district_link.get_text(strip=True) if district_link else district_cell.get_text(strip=True)
 
-                # Seniority date
-                seniority_date = cells[4].get_text(strip=True) if len(cells) > 4 else ""
-
                 data.append({
-                    "Name": rep_name,
-                    "Wiki Tag": wiki_tag,
-                    "Party": party,
-                    "District": district,
-                    "Seniority Date": seniority_date
+                    "name": rep_name,
+                    "wiki_tag": wiki_tag,
+                    "party": party,
+                    "district": district
                 })
 
     return data
