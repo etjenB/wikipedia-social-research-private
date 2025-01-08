@@ -28,3 +28,7 @@ wikipedia-social-research-private/
 │   ├── test_main.py
 │   └── test_utils.py
 └── README.md
+
+
+-----------------------------------------------------------------------
+wikipedia-social-research-private/ ├── collect_data_eric/ │ ├── main.py │ ├── utils.py │ └── config/ │ ├── settings.yaml │ └── defaults.yaml ├── FetchingRelevantPoliticians/ │ ├── test_main.py │ └── test_utils.py ├── Merging_Plotting/ │ ├── test_main.py │ └── test_utils.py ├── ProjectAITestData/ │ ├── test_main.py │ └── test_utils.py └── README.md
