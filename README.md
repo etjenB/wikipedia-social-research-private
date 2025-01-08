@@ -27,4 +27,5 @@ After cloning the project you should have a following folder structure:
 ├── ProjectAITestData/
 │   ├── test_main.py
 │   └── test_utils.py
-└── README.md```
+└── README.md
+```
