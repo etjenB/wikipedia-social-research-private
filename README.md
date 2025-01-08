@@ -13,12 +13,6 @@ After cloning the project you should have a following folder structure:
 -----------------------------------------------------------------------
 ```
 wikipedia-social-research-private/
-├── collect_data_eric/
-│   ├── main.py
-│   ├── utils.py
-│   └── config/
-│       ├── settings.yaml
-│       └── defaults.yaml
 ├── FetchingRelevantPoliticians/
 │   ├── Revisions/
 │   │   ├── merge_revisions_uk.py
@@ -37,9 +31,14 @@ wikipedia-social-research-private/
 │       └── Senate/
 │           ├── 113th_congress.py
 │           └── 114th_to_117_congress.py
+├── FetchingRelevantPoliticiansGerAu/
+│   ├── collect_data.py
+│   └── wiki_links.py
 ├── Merging_Plotting/
-│   ├── test_main.py
-│   └── test_utils.py
+│   ├── Create_AUS_GER_CSVs.py
+│   ├── Create_UK_US_CSVs.py
+│   ├── Mapping_Parties.py
+│   └── Plotting_Revisions.py
 ├── ProjectAITestData/
 │   ├── MoreComplex/
 │   │   ├── Revisions_Timeline_Comp.py
