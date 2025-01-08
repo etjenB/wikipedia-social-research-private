@@ -2,8 +2,6 @@
 
 ## Info
 
-## Guidance
-
 ### Step 1
 Clone the project to a folder
 
