@@ -1,8 +1,19 @@
 import os
 import pandas as pd
 
+# Get the base directory of the script execution
+base_dir = os.path.abspath(os.path.join(os.getcwd(), ".."))
+
+# Define paths dynamically based on the base directory
+revisions_ger_aus = os.path.join(base_dir, "FetchingRelevantPoliticiansGerAu", "Revisions")
+data_folder = os.path.join(base_dir, "FetchingRelevantPoliticiansGerAu", "Germany_Austria_data")
+output_folder = os.path.join(os.getcwd(), "RevisionData")
+
+# Create the output folder if it doesn't exist
+os.makedirs(output_folder, exist_ok=True)
+
 def load_revision_data(revisions_folder):
-    #Combine all CSV files of given directory
+    # Combine all CSV files in the given directory
     revision_files = os.listdir(revisions_folder)
     revision_data = []
     
@@ -13,18 +24,19 @@ def load_revision_data(revisions_folder):
                 revisions = pd.read_csv(os.path.join(revisions_folder, file))
                 revisions['Politician'] = politician_name
                 revision_data.append(revisions)
-            except:
+            except Exception as e:
+                print(f"Error processing file {file}: {e}")
                 continue
     
     return pd.concat(revision_data, ignore_index=True)
 
-def load_politician_data(politicians_folder, country_name):
-    #Combine all politician info of given directory and add Country Name as a column
-    politician_files = [file for file in os.listdir(politicians_folder) if file.endswith('.csv')]
+def load_politician_data(data_folder, country_name, prefix):
+    # Combine all politician info CSVs in the given directory that match the prefix
+    politician_files = [file for file in os.listdir(data_folder) if file.startswith(prefix) and file.endswith('.csv')]
     politician_data = []
     
     for file in politician_files:
-        dataframe = pd.read_csv(os.path.join(politicians_folder, file))
+        dataframe = pd.read_csv(os.path.join(data_folder, file))
         dataframe['Country'] = country_name
         politician_data.append(dataframe)
     
@@ -54,7 +66,7 @@ def clean_and_merge_data(revisions_dataframe, austria_dataframe, germany_datafra
     return politicians_dataframe
 
 def save_politician_data(politicians_dataframe, output_folder):
-    #Save German and Austrian data in seperate CSVs 
+    # Save German and Austrian data in separate CSVs
     austrian_politicians = politicians_dataframe[politicians_dataframe['Country'] == 'Austria']
     german_politicians = politicians_dataframe[politicians_dataframe['Country'] == 'Germany']
     
@@ -65,15 +77,16 @@ def save_politician_data(politicians_dataframe, output_folder):
     austrian_politicians.to_csv(os.path.join(output_folder, 'austria_politician_data.csv'), index=False)
     german_politicians.to_csv(os.path.join(output_folder, 'germany_politician_data.csv'), index=False)
 
+if __name__ == "__main__":
+    # Load data
+    revisions_dataframe = load_revision_data(revisions_ger_aus)
+    austria_dataframe = load_politician_data(data_folder, 'Austria', prefix="austrian")
+    germany_dataframe = load_politician_data(data_folder, 'Germany', prefix="geram")
+    
+    # Clean and merge data
+    politicians_dataframe = clean_and_merge_data(revisions_dataframe, austria_dataframe, germany_dataframe)
+    
+    # Save data
+    save_politician_data(politicians_dataframe, output_folder)
 
-revisions_ger_aus = '/Users/leonmoik/Documents/RevisionData/GER/Revisions_of_german_and_austiran_MoP/revisionen'
-aus_folder = '/Users/leonmoik/Documents/RevisionData/GER/Austria_data/infos_to_austrian_mop/infos_to_austrian_mop'
-ger_folder = '/Users/leonmoik/Documents/RevisionData/GER/Germany_data/infos_to_german_mop/infos_to_german_mop'
-output_folder = '/Users/leonmoik/Documents/RevisionData'
-
-
-revisions_dataframe = load_revision_data(revisions_ger_aus)
-austria_dataframe = load_politician_data(aus_folder, 'Austria')
-germany_dataframe = load_politician_data(ger_folder, 'Germany')
-politicians_dataframe = clean_and_merge_data(revisions_dataframe, austria_dataframe, germany_dataframe)
-save_politician_data(politicians_dataframe, output_folder)
+    print(f"Data has been successfully processed and saved in '{output_folder}'")

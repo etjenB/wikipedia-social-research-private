@@ -1,18 +1,28 @@
+import os
 import pandas as pd
 
-#Mapping parties of Countries 
-def map_party(df, column_name, mapping_dict, output_file):
+# Define base directory and file paths dynamically
+base_dir = os.path.abspath(os.getcwd())
+data_dir = os.path.join(base_dir, "RevisionData")
+
+# Function to map party names and update the CSV
+def map_party(file_path, column_name, mapping_dict):
+    df = pd.read_csv(file_path)
     df['Party'] = df[column_name].map(mapping_dict)
     df.drop(columns=[column_name], inplace=True)
-    df.to_csv(output_file, index=False)
+    df.to_csv(file_path, index=False)
+    print(f"Updated {file_path}")
 
+# Mapping dictionaries
+party_mapping_aus = {
+    'GRÜNE': 'GRÜNE',
+    'ÖVP': 'ÖVP',
+    'FPÖ': 'FPÖ',
+    'SPÖ': 'SPÖ',
+    'NEOS': 'NEOS',
+    'fraktionslos': 'Independent',
+}
 
-#Mapping Austrian parties 
-aus = pd.read_csv('/Users/leonmoik/Documents/RevisionData/austria_politician_data.csv')
-map_party(aus, 'Wahlpartei', {}, '/Users/leonmoik/Documents/RevisionData/austria_politician_data.csv')
-
-#Mapping German parties
-ger = pd.read_csv('/Users/leonmoik/Documents/RevisionData/germany_politician_data.csv')
 party_mapping_ger = {
     'FDP': 'FDP', 
     'CDU/CSU (CDU)': 'CDU',
@@ -32,12 +42,7 @@ party_mapping_ger = {
     'fraktionslos (SSW)': 'Independent', 
     'fraktionslos (AfD)': 'Independent',
 }
-map_party(ger, 'Fraktion_Partei', party_mapping_ger, '/Users/leonmoik/Documents/RevisionData/germany_politician_Data.csv')
 
-
-
-#Mapping UK parties
-uk = pd.read_csv('/Users/leonmoik/Documents/RevisionData/uk_politician_data.csv')
 party_mapping_uk = {
     'Conservative': 'Conservative', 'Conservative Party': 'Conservative', 'Labour': 'Labour',
     'Labour Co-operative': 'Labour', 'Liberal Democrats': 'Liberal Democrats', 'Liberal Democrats[j]': 'Liberal Democrats',
@@ -51,22 +56,13 @@ party_mapping_uk = {
     'Health Concern': 'Other', 'BGPV': 'Other', 'The Speaker': 'Speaker', 'The Speaker seeking re-election': 'Speaker',
     'Speaker[i]': 'Speaker', 'Vacant[l]': 'Vacant', 'Vacant[i]': 'Vacant',
 }
-map_party(uk, 'party', party_mapping_uk, '/Users/leonmoik/Documents/RevisionData/uk_politician_data.csv')
 
-
-#Mapping US Represantatives Parties
-us1 = pd.read_csv('/Users/leonmoik/Documents/RevisionData/us_rep_politician_data.csv')
-party_mapping_us1 = {
+party_mapping_us_rep = {
     'D': 'Democratic Party', 
     'R': 'Republican Party',
 }
-map_party(us1, 'party', party_mapping_us1, '/Users/leonmoik/Documents/RevisionData/us_rep_politician_data.csv')
 
-
-
-#Mapping US Senat Parties 
-us2 = pd.read_csv('/Users/leonmoik/Documents/RevisionData/us_sen_politician_data.csv')
-party_mapping_us2 = {
+party_mapping_us_sen = {
     'Republican': 'Republican Party', 
     'R': 'Republican Party', 
     'Democratic': 'Democratic Party', 
@@ -75,4 +71,12 @@ party_mapping_us2 = {
     'Independent': 'Independent', 
     'I': 'Independent',
 }
-map_party(us2, 'party', party_mapping_us2, '/Users/leonmoik/Documents/RevisionData/us_sen_politician_data.csv')
+
+# Apply mappings to CSVs
+map_party(os.path.join(data_dir, 'austria_politician_data.csv'), 'Wahlpartei', party_mapping_aus)
+map_party(os.path.join(data_dir, 'germany_politician_data.csv'), 'Fraktion_Partei', party_mapping_ger)
+map_party(os.path.join(data_dir, 'uk_politician_data.csv'), 'party', party_mapping_uk)
+map_party(os.path.join(data_dir, 'us_representatives_data.csv'), 'party', party_mapping_us_rep)
+map_party(os.path.join(data_dir, 'us_senators_data.csv'), 'party', party_mapping_us_sen)
+
+print("Party mapping completed for all files.")
