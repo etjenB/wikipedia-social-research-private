@@ -3,18 +3,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
-
 # Election details
 election_times = {
     'UK': {
         'General': ['2010-05-06', '2015-05-07', '2017-06-08', '2019-12-12', '2024-07-04']
     },
-    'USA-Represantatives': {
-        'Represantatives': ['2012-11-06', '2014-11-04', '2016-11-08', '2018-11-06', '2020-11-03'],
+    'USA': {
+        'General': ['2012-11-06', '2014-11-04', '2016-11-08', '2018-11-06', '2020-11-03']
     },
-    'USA-Senat': {
-        'Senators': ['2012-11-06', '2014-11-04', '2016-11-08', '2018-11-06', '2020-11-03']
-    },  
     'Germany': {
         'Bundestag': ['2013-09-22', '2017-09-24', '2021-09-26']
     },
@@ -31,20 +27,82 @@ election_color = {
     "General": "blue"
 }
 
+country_name_mapping = {
+    "us": "USA",
+    "uk": "UK",
+    "germany": "Germany",
+    "austria": "Austria",
+}
+
 def plot_revisions_country(data_folder, plots_folder):
     if not os.path.exists(plots_folder):
         os.makedirs(plots_folder)  # Create the plots folder if it doesn't exist
+
+    us_combined = False  # Flag to track if US plot is combined
 
     for country_file in os.listdir(data_folder):
         if not country_file.endswith('.csv'):
             continue  # Skip non-CSV files
 
         country_name = country_file.split('_')[0]  # Extract country name from filename
-        file_path = os.path.join(data_folder, country_file)
-        dataframe = pd.read_csv(file_path)
 
-        # Convert 'Date' column to datetime
-        dataframe['Date'] = pd.to_datetime(dataframe['Date'])
+        # Skip individual US files after creating the combined plot
+        if country_name == "us" and us_combined:
+            continue
+
+        # Special handling for the United States
+        if country_name == "us" and not us_combined:
+            # Paths to the Representatives and Senators data files
+            representatives_path = os.path.join(data_folder, "us_representatives_data.csv")
+            senators_path = os.path.join(data_folder, "us_senators_data.csv")
+
+            # Check if both files exist
+            if not os.path.exists(representatives_path) or not os.path.exists(senators_path):
+                print(f"Error: One or both US data files are missing! Expected at:\n"
+                    f"Representatives: {representatives_path}\n"
+                    f"Senators: {senators_path}")
+                continue
+
+            # Load both data files into DataFrames
+            try:
+                rep_data = pd.read_csv(representatives_path)
+                sen_data = pd.read_csv(senators_path)
+            except Exception as e:
+                print(f"Error reading US data files: {e}")
+                continue
+
+            # Convert 'Date' columns to datetime in both DataFrames
+            rep_data['Date'] = pd.to_datetime(rep_data['Date'], errors='coerce')
+            sen_data['Date'] = pd.to_datetime(sen_data['Date'], errors='coerce')
+
+            # Combine the two DataFrames
+            dataframe = pd.concat([rep_data, sen_data], ignore_index=True)
+            print(f"Successfully combined Representatives and Senators data for USA. Total records: {len(dataframe)}")
+
+            # Assign USA-specific variables
+            country_name = "USA"  # For the plot title and file name
+            mapped_country_name = "USA-Combined"  # For looking up election details
+            us_combined = True  # Set the flag to avoid reprocessing this block later
+
+        else:
+            # For other countries, process normally
+            file_path = os.path.join(data_folder, country_file)
+
+            # Check if the file exists
+            if not os.path.exists(file_path):
+                print(f"Error: Data file for {country_file} not found at {file_path}")
+                continue
+
+            # Load the country's data file into a DataFrame
+            try:
+                dataframe = pd.read_csv(file_path)
+            except Exception as e:
+                print(f"Error reading data file for {country_file}: {e}")
+                continue
+
+            # Convert 'Date' column to datetime
+            dataframe['Date'] = pd.to_datetime(dataframe['Date'], errors='coerce')
+            print(f"Loaded data for {country_name}. Total records: {len(dataframe)}")
 
         # Group data by 8-week periods and by party
         grouped_data = (dataframe.groupby([pd.Grouper(key='Date', freq='8W'), 'Party'])
@@ -63,20 +121,30 @@ def plot_revisions_country(data_folder, plots_folder):
 
         # Add election period highlights
         added_election_labels = set()
-        if country_name in election_times:
-            for election_type, dates in election_times[country_name].items():
+
+        # Map the country name correctly for election periods
+        mapped_country_name = country_name_mapping.get(country_name.lower(), country_name)
+
+        if mapped_country_name in election_times:
+            for election_type, dates in election_times[mapped_country_name].items():
                 for election_date in dates:
                     # Convert the election date to a datetime object
-                    election_date = pd.to_datetime(election_date)
+                    election_date = pd.to_datetime(election_date, errors='coerce')
+
+                    # Ensure valid datetime
+                    if pd.isna(election_date):
+                        continue
 
                     start_date = election_date - pd.Timedelta(days=90)
                     end_date = election_date + pd.Timedelta(days=90)
-                    color = election_color[election_type]
+                    color = election_color.get(election_type, 'grey')  # Default to gray if type not found
+
+                    # Add axvspan and ensure no duplicate labels
                     if election_type not in added_election_labels:
-                        plt.axvspan(start_date, end_date, color=color, alpha=0.2, label=f'{election_type} Election')
+                        plt.axvspan(start_date, end_date, color=color, alpha=0.4, label=f'{election_type} Election')
                         added_election_labels.add(election_type)
                     else:
-                        plt.axvspan(start_date, end_date, color=color, alpha=0.2)
+                        plt.axvspan(start_date, end_date, color=color, alpha=0.4)
 
         # Set plot title and labels
         plt.title(f"Wikipedia Revisions Trends in {country_name}")
@@ -95,6 +163,7 @@ def plot_revisions_country(data_folder, plots_folder):
         plt.close()
 
 if __name__ == "__main__":
-    data_folder = "/Users/leonmoik/Documents/RevisionData/Final Datasets"  # Input folder
-    plots_folder = "/Users/leonmoik/Documents/RevisionData/Plots"  # Output folder
+    base_dir = os.path.abspath(os.getcwd())
+    data_folder = os.path.join(base_dir, "RevisionData")  # Input folder
+    plots_folder = os.path.join(data_folder, "Plots")  # Output folder
     plot_revisions_country(data_folder, plots_folder)

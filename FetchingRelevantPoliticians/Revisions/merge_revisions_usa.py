@@ -63,12 +63,13 @@ def save_revisions_to_csv(revisions, article_title):
     print(f"Saved revisions for '{article_title}' to '{file_path}'")
 
 def main():
-    # Find all CSV files starting with representatives_
-    csv_files = glob.glob("representatives_*.csv") + glob.glob("senators_*.csv")
+    # Look for CSV files in the specific folders
+    csv_files = glob.glob(os.path.join("representatives_data", "*.csv")) + \
+                glob.glob(os.path.join("senators_data", "*.csv"))
 
     # If no such files found, just return
     if not csv_files:
-        print("No CSV files found matching 'representatives_*.csv'. Exiting.")
+        print("No CSV files found in 'representatives_data' or 'senators_data'. Exiting.")
         return
 
     # Read and concatenate all CSVs into a single DataFrame
