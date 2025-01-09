@@ -23,10 +23,11 @@ wikipedia-social-research-private/
 │       ├── HouseOfRepresentatives/
 │       │   ├── 113th_congress_hor.py
 │       │   ├── 114th_to_116th_congress_hor.py
-│       │   └── 117th_congress_hor.py
+│       │   ├── 117th_congress_hor.py
+│       │   └── 118th_congress_hor.py
 │       └── Senate/
 │           ├── 113th_congress.py
-│           └── 114th_to_117_congress.py
+│           └── 114th_to_118_congress.py
 ├── FetchingRelevantPoliticiansGerAu/
 │   ├── collect_data.py
 │   └── wiki_links.py
@@ -68,10 +69,10 @@ All of the scripts need to be ran in the correct folder. Fetching of the UK poli
   - folder called election_data will be generated with csv files for all elections from 2010 to 2024, so 5 csv files
 
 After this we can go to USA folder, so our path is *~\wikipedia-social-research-private\FetchingRelevantPoliticians\USA>* and there we have two folders for House of Representatives and Senate. In there we have scripts but we all of the scripts need to be executed in the USA path so we don't change the path *~\wikipedia-social-research-private\FetchingRelevantPoliticians\USA>* and there we can:
-  - execute scripts from the HouseOfRepresentatives folder *113th_congress_hor.py*, *114th_to_116th_congress_hor.py*, *117th_congress_hor.py*
-  - folder called *representatives_data* will be generated and inside it 5 csv files for each elections from 113th to 117th
-  - execute the two scripts from the Senate folder *113th_congress.py* and *114th_to_117_congress.py*
-  - new folder called *senators_data* will be generated and inside it 5 csv files for each elections from 113th to 117th
+  - execute scripts from the HouseOfRepresentatives folder *113th_congress_hor.py*, *114th_to_116th_congress_hor.py*, *117th_congress_hor.py*, *118th_congress_hor.py*
+  - folder called *representatives_data* will be generated and inside it 6 csv files for each elections from 113th to 118th
+  - execute the two scripts from the Senate folder *113th_congress.py* and *114th_to_118_congress.py*
+  - new folder called *senators_data* will be generated and inside it 6 csv files for each elections from 113th to 118th
 
 Next we have to execute merge scripts that are located in Revisions Folder inside FetchingRelevantPoliticians folder. So, what we need to do is we stay in the USA path *~\wikipedia-social-research-private\FetchingRelevantPoliticians\USA>* and there we:
   - execute the *merge_revisions_usa.py*
