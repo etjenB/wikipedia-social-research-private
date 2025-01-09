@@ -8,7 +8,8 @@ urls = {
     "114th": "https://en.wikipedia.org/wiki/List_of_United_States_senators_in_the_114th_Congress",
     "115th": "https://en.wikipedia.org/wiki/List_of_United_States_senators_in_the_115th_Congress",
     "116th": "https://en.wikipedia.org/wiki/List_of_United_States_senators_in_the_116th_Congress",
-    "117th": "https://en.wikipedia.org/wiki/List_of_United_States_senators_in_the_117th_Congress"
+    "117th": "https://en.wikipedia.org/wiki/List_of_United_States_senators_in_the_117th_Congress",
+    "118th": "https://en.wikipedia.org/wiki/List_of_United_States_senators_in_the_118th_Congress"
 }
 
 def fetch_senators_data(url):
