@@ -9,7 +9,7 @@ election_times = {
         'General': ['2010-05-06', '2015-05-07', '2017-06-08', '2019-12-12', '2024-07-04']
     },
     'USA': {
-        'General': ['2012-11-06', '2014-11-04', '2016-11-08', '2018-11-06', '2020-11-03']
+        'General': ['2012-11-06', '2014-11-04', '2016-11-08', '2018-11-06', '2020-11-03', '2022-11-08', '2024-11-05']
     },
     'Germany': {
         'Bundestag': ['2013-09-22', '2017-09-24', '2021-09-26']
@@ -141,10 +141,10 @@ def plot_revisions_country(data_folder, plots_folder):
 
                     # Add axvspan and ensure no duplicate labels
                     if election_type not in added_election_labels:
-                        plt.axvspan(start_date, end_date, color=color, alpha=0.4, label=f'{election_type} Election')
+                        plt.axvspan(start_date, end_date, color=color, alpha=0.2, label=f'{election_type} Election')
                         added_election_labels.add(election_type)
                     else:
-                        plt.axvspan(start_date, end_date, color=color, alpha=0.4)
+                        plt.axvspan(start_date, end_date, color=color, alpha=0.2)
 
         # Set plot title and labels
         plt.title(f"Wikipedia Revisions Trends in {country_name}")
