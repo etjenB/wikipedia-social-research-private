@@ -34,6 +34,12 @@ country_name_mapping = {
     "austria": "Austria",
 }
 
+# Party colors
+allowed_colors = [
+    'blue', 'green', 'orange', 'purple', 'brown', 
+    'pink', 'gray', 'olive', 'teal', 'navy'
+]
+
 def plot_revisions_country(data_folder, plots_folder):
     if not os.path.exists(plots_folder):
         os.makedirs(plots_folder)  # Create the plots folder if it doesn't exist
@@ -113,11 +119,38 @@ def plot_revisions_country(data_folder, plots_folder):
         grouped_data = grouped_data[(grouped_data['Date'] >= '2010-01-01') & 
                                     (grouped_data['Date'] <= '2024-12-31')]
 
+        party_color_map = {}
+
+        # Aggregate total revisions per party
+        total_revisions_per_party = grouped_data.groupby('Party')['Revisions'].sum().sort_values(ascending=False)
+
+        # Get the top 4 parties by total revisions
+        top_4_parties = total_revisions_per_party.head(4).index.tolist()
+
+        # Mark other parties as "Other Parties"
+        grouped_data['Party'] = grouped_data['Party'].apply(lambda x: x if x in top_4_parties else 'Other Parties')
+
+        # Re-aggregate grouped data after combining "Other Parties"
+        grouped_data = (grouped_data.groupby([pd.Grouper(key='Date', freq='8W'), 'Party'])
+                        .sum()
+                        .reset_index())
+
+        # Party color map for the top 4 parties and "Other Parties"
+        party_color_map = {party: allowed_colors[i % len(allowed_colors)] for i, party in enumerate(top_4_parties)}
+        party_color_map['Other Parties'] = 'gray'  # Assign a distinct color for "Other Parties"
+
         # Plotting
         plt.figure(figsize=(12, 6))
         for party in grouped_data['Party'].unique():
+            if party not in party_color_map:
+                party_color_map[party] = allowed_colors[len(party_color_map) % len(allowed_colors)]
+
+            # Use the assigned color for the party
             party_data = grouped_data[grouped_data['Party'] == party]
-            plt.plot(party_data['Date'], party_data['Revisions'], label=party, linewidth=2, marker='.')
+            #output_file_path = os.path.join(data_folder, f"{country_name}_grouped_data.csv")  # Add a filename
+            #grouped_data.to_csv(output_file_path, index=False)
+            plt.plot(party_data['Date'], party_data['Revisions'],
+                     label=party, linewidth=2, marker='.', color=party_color_map[party], alpha=0.6)
 
         # Add election period highlights
         added_election_labels = set()
@@ -142,15 +175,17 @@ def plot_revisions_country(data_folder, plots_folder):
                     # Add axvspan and ensure no duplicate labels
                     if election_type not in added_election_labels:
                         plt.axvspan(start_date, end_date, color=color, alpha=0.2, label=f'{election_type} Election')
+                        plt.axvline(election_date, color="red", alpha=0.6, label=f'{election_type} Election Day')
                         added_election_labels.add(election_type)
                     else:
                         plt.axvspan(start_date, end_date, color=color, alpha=0.2)
+                        plt.axvline(election_date, color="red", alpha=0.6)
 
         # Set plot title and labels
         plt.title(f"Wikipedia Revisions Trends in {country_name}")
         plt.xlabel("Date")
         plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
-        plt.gca().xaxis.set_major_locator(mdates.MonthLocator(interval=6))  # Show date every 6 months
+        plt.gca().xaxis.set_major_locator(mdates.MonthLocator(interval=12))  # Show date every 12 months
         plt.xticks(rotation=45)
         plt.ylabel("Number of Revisions per 8 Weeks")
         plt.legend()
