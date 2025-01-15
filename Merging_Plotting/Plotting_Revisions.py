@@ -20,11 +20,11 @@ election_times = {
 }
 
 election_color = {
-    "Bundestag": "blue",
-    "Represantatives": "blue",
-    "Senators": "blue",
-    "Nationalrat": "blue",
-    "General": "blue"
+    "Bundestag": "gray",
+    "Represantatives": "gray",
+    "Senators": "gray",
+    "Nationalrat": "gray",
+    "General": "gray"
 }
 
 country_name_mapping = {
@@ -170,24 +170,26 @@ def plot_revisions_country(data_folder, plots_folder):
 
                     start_date = election_date - pd.Timedelta(days=90)
                     end_date = election_date + pd.Timedelta(days=90)
-                    color = election_color.get(election_type, 'grey')  # Default to gray if type not found
+                    color = election_color.get(election_type, 'gray')  # Default to gray if type not found
 
                     # Add axvspan and ensure no duplicate labels
                     if election_type not in added_election_labels:
-                        plt.axvspan(start_date, end_date, color=color, alpha=0.2, label=f'{election_type} Election')
-                        plt.axvline(election_date, color="red", alpha=0.6, label=f'{election_type} Election Day')
+                        plt.axvspan(start_date, end_date, color=color, alpha=0.2, label=f'{election_type} Election [±90 days]')
+                        plt.axvline(election_date, color="red", linestyle="--", alpha=0.6, label=f'{election_type} Election Day')
                         added_election_labels.add(election_type)
                     else:
                         plt.axvspan(start_date, end_date, color=color, alpha=0.2)
-                        plt.axvline(election_date, color="red", alpha=0.6)
+                        plt.axvline(election_date, color="red", linestyle="--", alpha=0.6)
 
         # Set plot title and labels
-        plt.title(f"Wikipedia Revisions Trends in {country_name}")
-        plt.xlabel("Date")
+        #plt.title(f"Wikipedia Revisions Trends in {country_name}")
+        #plt.xlabel("Date")
         plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
         plt.gca().xaxis.set_major_locator(mdates.MonthLocator(interval=12))  # Show date every 12 months
         plt.xticks(rotation=45)
-        plt.ylabel("Number of Revisions per 8 Weeks")
+        # If we want log scale
+        #plt.yscale('log')
+        #plt.ylabel("Number of Revisions per 8 Weeks")
         plt.legend()
 
         # Save the plot
