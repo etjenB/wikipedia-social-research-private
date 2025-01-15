@@ -1,5 +1,13 @@
 # Wikipedia Social Research
 
+## Info
+
+For the purpose of reproducibility of our research we uploaded the files we got by running these scripts in the time the research was done, so if any of the data changed we wanted to make sure to have the original data stored somewhere. All the data we fetched at the time is stored on the google drive: https://drive.google.com/drive/folders/1z4Hh70VD62ow4R3LSODgIil5ssI7SFbv?usp=sharing
+
+## Guide
+
+Here is the complete guide on how to reproduce the whole research that was done using python scripts that we made.
+
 ### Step 1
 Clone the project to a folder
 
@@ -34,6 +42,7 @@ wikipedia-social-research-private/
 ├── Merging_Plotting/
 │   ├── Create_AUS_GER_CSVs.py
 │   ├── Create_UK_US_CSVs.py
+│   ├── Left_Right_Barchart.py
 │   ├── Mapping_Parties.py
 │   └── Plotting_Revisions.py
 ├── ProjectAITestData/
@@ -95,6 +104,6 @@ For the data analysis we need to go to the Merging_Plotting folder so our path s
   - we run the script *Create_AUS_GER_CSVs.py*
   - in the folder *RevisionData* additional csv files for germany and austria get generated
 
-Now that our data is ready we can do the mapping of the parties by running script *Mapping_Parties.py* and as a final step we can plot the data in any appropriate way using script *Plotting_Revisions.py*.
+Now that our data is ready we can do the mapping of the parties by running script *Mapping_Parties.py* and as a final step we can plot the data in any appropriate way using scripts *Plotting_Revisions.py* and *Left_Right_Barchart.py*.
 
 
