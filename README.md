@@ -1,5 +1,9 @@
 # Wikipedia Social Research
 
+## Poster
+
+[EditingPolitics_Group17_Poster.pdf](https://github.com/user-attachments/files/18561911/EditingPolitics_Group17_Poster.pdf)
+
 ## Info
 
 For the purpose of reproducibility of our research we uploaded the files we got by running these scripts in the time the research was done, so if any of the data changed we wanted to make sure to have the original data stored somewhere. All the data we fetched at the time is stored on the google drive: https://drive.google.com/drive/folders/1z4Hh70VD62ow4R3LSODgIil5ssI7SFbv?usp=sharing
