@@ -1,7 +1,5 @@
 # Wikipedia Social Research
 
-## Poster
-
 ![lowq_EditingPolitics_Group17_Poster_page-0001](https://github.com/user-attachments/assets/21fa21a9-d570-48da-9197-cc9686892bff)
 
 [EditingPolitics_Group17_Poster.pdf](https://github.com/user-attachments/files/18561911/EditingPolitics_Group17_Poster.pdf)
